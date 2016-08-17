@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="qbot">
+<head>
+<meta charset="ISO-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=11" />
+<title>Sample Angular</title>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css" />
+	<style type="">
+	#panel-head { font-size: 20px; margin: 0 auto; width:50%}	
+	#panel-body { margin: 10px auto; width: 50% }
+	</style>
+</head>
+<body>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+
+<h2>QBot</h2>
+
+<div id="main-input" ng-controller="QbotController as qbot">
+	<div id="panel-head">
+		Please ask me a question
+	</div>
+	<div id="panel-body">
+	<form name="main">
+		<input type="text" name="question" ng-model="question"></input>		
+	</form>
+	<span>{{qbot.findAnswer(question)}}</span>	
+	</div>
+</div>
+</body>
+</html>
