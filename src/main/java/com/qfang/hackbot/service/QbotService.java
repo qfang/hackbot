@@ -24,8 +24,9 @@ public class QbotService {
     /**
      * Find answer to a question.
      * Results are cached to improve response time for frequent questions.
+     * Cache only applies to non-null questions.
      */
-    @Cacheable(value = "answers", key = "#question")
+    @Cacheable(value = "answers", key = "#question", condition = "#question != null")
     public String findAnswer(String question) {
         if (question == null) {
             return "Please ask a question";
