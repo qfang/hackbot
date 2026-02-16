@@ -5,10 +5,19 @@
 	
 	app.controller("QbotController", function($scope) {
 
+		// Function registry for safe command dispatch
+		var commandHandlers = {
+			'findTime': findTime
+		};
+
 		this.findAnswer = function(value){
 			var ans = questions[value];			
 			if (typeof ans == 'string' && ans.indexOf("$") == 0){
-				return eval(ans.substr(1) + "()");								
+				var commandName = ans.substr(1);
+				var handler = commandHandlers[commandName];
+				if (handler) {
+					return handler();
+				}
 			} 
 			return ans;
 		}
@@ -20,7 +29,7 @@
 		"what time is it" : "$findTime"
 	};
 
-	this.findTime = function(){
+	function findTime(){
 		return "right now it's " + new Date();
 	}	
 

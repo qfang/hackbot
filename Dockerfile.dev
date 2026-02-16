@@ -1,0 +1,31 @@
+# Single-stage Dockerfile for development/testing
+# Use this if you encounter certificate issues with the multi-stage build
+
+FROM maven:3.9-eclipse-temurin-17-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY . .
+
+# Build the application
+RUN mvn clean package -DskipTests -B || true
+
+# Use built jar (if build succeeded) or the existing one
+RUN if [ -f target/*.jar ]; then mv target/*.jar app.jar; fi
+
+# Expose port
+EXPOSE 8080
+
+# JVM tuning for containers and performance
+ENV JAVA_OPTS="-XX:+UseContainerSupport \
+    -XX:MaxRAMPercentage=75.0 \
+    -XX:InitialRAMPercentage=50.0 \
+    -XX:+UseG1GC \
+    -XX:MaxGCPauseMillis=200 \
+    -XX:+UseStringDeduplication \
+    -Djava.security.egd=file:/dev/./urandom"
+
+# Run application
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar || (mvn spring-boot:run)"]
